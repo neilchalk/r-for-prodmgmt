@@ -1,0 +1,135 @@
+---
+title: "Google Analytics Stats"
+author: "Neil Chalk"
+date: "6 November 2017"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+#Welcome
+
+Welcome to the Google Analytics report template based on [Google Analytics y R. Parte II: gráficos con ggplot2](http://omargonzalesdiaz.com/blog/googleanalytics-ggplot2.html) by omar gonzáles díaz with additional work by Neil Chalk. This is part of a project aiming to show you how to use R for Product Management.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("readr")
+library(dplyr)
+library(ggplot2)
+
+sessions <- read_csv("data/sessions.csv")
+sessions_per_hour <- read_csv("data/sessions_per_hour.csv")
+
+heat_scale <- c("Grey","Blue","Orange","Red")
+days_of_week <- c("Monday","Tuesday","Wednesday","Thursday", "Friday", "Saturday","Sunday")
+
+sessions$medium <- trimws(sessions$medium, which = "both")
+sessions$source <- trimws(sessions$source, which = "both")
+
+#########################################
+
+sessions$mes <- months(sessions$date)
+sessions$mes <- factor(sessions$mes, levels = c("January", "Feburary",
+                                                "March", "Abril",
+                                                "May", "June",
+                                                "July", "August",
+                                                "September", "October", "November", "December"), ordered = T)
+
+sessions$dia <- weekdays(sessions$date)
+sessions$dia <- ordered(sessions$dia, levels=rev(days_of_week)) 
+sessions_per_hour$dia <- weekdays(sessions_per_hour$date)
+sessions_per_hour$dia <- ordered(sessions_per_hour$dia, levels=rev(days_of_week)) 
+
+
+sessions_per_month <- sessions %>%
+  group_by(mes) %>%
+  summarise(sessions = sum(sessions))
+
+sessions_hour <- sessions_per_hour %>%
+  group_by(dia, hour) %>%
+  summarise(sessions = sum(sessions))
+
+sessions_per_day <- sessions %>%
+  group_by(date) %>%
+  summarise(sessions = sum(sessions))
+```
+
+## Sessions 
+
+The basic stat for how your site is performing. How many sessions do we get per month?
+
+```{r echo=FALSE}
+
+title <- "Sessions per Month" 
+
+dd <- ggplot(sessions_per_month, aes(x = mes, y = sessions, fill = sessions, label = sessions)) 
+dd <- dd +  geom_col()
+dd <- dd + labs(x="Month", y="Sessions", title= title)
+dd <- dd + scale_fill_gradientn(colours = heat_scale)
+dd <- dd + theme(plot.title=element_text(hjust=0.1))
+dd <- dd + theme(axis.ticks=element_blank())
+dd <- dd + theme(axis.text=element_text(size=12))
+dd <- dd + theme(legend.title=element_text(size=10))
+dd <- dd + theme(legend.text=element_text(size=8))
+dd <- dd + geom_label(vjust = -0.5)
+dd <- dd + ylim(0,ceiling(max(sessions_per_month$sessions))+400)
+dd <- dd + geom_label(fill = "white", vjust = -0.5)
+dd
+```
+
+
+During this time this is how the usage varies during the day over the course of a week.
+
+```{r echo=FALSE}
+
+gg <- ggplot(sessions_hour, aes(x=hour, y=dia, fill=sessions))
+gg <- gg + scale_fill_gradientn(colours = heat_scale)
+gg <- gg + geom_tile(color="white", size=0.1)
+gg <- gg + coord_equal()
+gg <- gg + labs(x=NULL, y=NULL, title="Sessions per day and hour")
+gg <- gg + theme(plot.title=element_text(hjust=0.1))
+gg <- gg + theme(axis.ticks=element_blank())
+gg <- gg + theme(axis.text.y =element_text(size=12))
+gg <- gg + theme(axis.text.x =element_text(size=10))
+gg <- gg + theme(legend.title=element_text(size=10))
+gg <- gg + theme(legend.text=element_text(size=8))
+gg
+
+```
+
+What usage pattern do we predit for next week? This can be a useful question to ask if you are putting a feature in production that you expect to increase user sessions. Using a forecast algoritnm like the Holt-Winters method will take into account peaks and troughs to give you a better picture of whether your change has made an impact.
+
+```{r echo=FALSE}
+library(forecast)
+xxxx <- ts(sessions_per_day$sessions, frequency = 7)
+hw(xxxx,6)
+plot(hw(xxxx, 6), main = "User sessions forecast for following week", xlab ="Week number", ylab = "Sessions")
+
+
+```
+
+Who has been our main referer? How has the source of traffic changed over time?
+
+```{r echo=FALSE}
+
+sessions_fuente <- sessions %>%
+  group_by(mes, source) %>%
+  summarise(sessions = sum(sessions))
+
+
+ee <- ggplot(sessions_fuente, aes(x = source, y = sessions, fill = sessions,
+                                  label = sessions)) 
+ee <- ee +  geom_col()
+ee <- ee + facet_wrap(~ mes) 
+ee <- ee + coord_flip()
+ee <- ee + labs(x="month", y="sessions", title="sessions per month")
+ee <- ee + scale_fill_gradientn(colours = heat_scale)
+ee <- ee + theme(plot.title=element_text(hjust=0.1))
+ee <- ee + theme(axis.ticks=element_blank())
+ee <- ee + theme(axis.text=element_text(size=12))
+ee <- ee + theme(legend.title=element_text(size=10))
+ee <- ee + theme(legend.text=element_text(size=8))
+ee <- ee + geom_label(hjust = -0.5)
+ee
+
+```
