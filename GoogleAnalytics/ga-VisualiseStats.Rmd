@@ -7,9 +7,9 @@ output:
   pdf_document: default
   word_document: default
 ---
-#Welcome
+# Welcome
 
-Welcome to the Google Analytics report template based on [Google Analytics y R. Parte II: gr·ficos con ggplot2](http://omargonzalesdiaz.com/blog/googleanalytics-ggplot2.html) by omar gonz·les dÌaz with additional work by Neil Chalk. This is part of a project aiming to show you how to use R for Product Management.
+Welcome to the Google Analytics report template based on [Google Analytics y R. Parte II: gr√°ficos con ggplot2](http://omargonzalesdiaz.com/blog/googleanalytics-ggplot2.html) by omar gonz√°les d√≠az with additional work by Neil Chalk. This is part of a project aiming to show you how to use R for Product Management.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
