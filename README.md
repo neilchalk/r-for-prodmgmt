@@ -11,13 +11,13 @@ As the name suggests, Product Managers dealing with data that want to use R as a
   * Install R from https://cran.r-project.org/bin/windows/base/
   * Install RStudio from https://www.rstudio.com/products/rstudio/download/
 * Install in Cloud9
-  * (StackOverflow answer on how to use R and Cloud9)[https://stackoverflow.com/questions/36897276/how-to-install-r-on-the-cloud-9-ide]
+  * [StackOverflow answer on how to use R and Cloud9](https://stackoverflow.com/questions/36897276/how-to-install-r-on-the-cloud-9-ide)
   
  The scripts should work pretty much unaltered from source, but if you want to edit then you'll need some background. Bit thof these intor courses are free:
- * (Try R at Codeschool)[https://www.codeschool.com/courses/try-r] is a good intro that covers wide range of topics, but without much depth
- * (Introduction to R at Datacamp)[https://www.datacamp.com/courses/free-introduction-to-r] gives a much deeper understanding of data types and R structure.
+ * [Try R at Codeschool](https://www.codeschool.com/courses/try-r) is a good intro that covers wide range of topics, but without much depth
+ * [Introduction to R at Datacamp](https://www.datacamp.com/courses/free-introduction-to-r) gives a much deeper understanding of data types and R structure.
 
-I already used Sublime as my text editor and can recommend (R-Box)[https://github.com/randy3k/R-Box] to improve the R support - e.g. it adds R Markdown syntax highlighting.
+I already used Sublime as my text editor and can recommend [R-Box](https://github.com/randy3k/R-Box) to improve the R support - e.g. it adds R Markdown syntax highlighting.
 
 ## Reports
 ## Google Analytics
