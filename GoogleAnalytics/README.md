@@ -32,5 +32,5 @@ ga_id <- 1
 This is based on [Google Analytics y R. Parte II: gráficos con ggplot2](http://omargonzalesdiaz.com/blog/googleanalytics-ggplot2.html) by omar gonzáles díaz with a couple of visualisations and updates to work with latest version of libraries. This R Markdown example file shows how you can generate automated reports from Google Analytics data. I have split out the query and saving the data to a plain R script so that the you can pull the data down to your machine and work on it locally, reducing the time it takes to run while you explore the data. 
 
 ## GA-Explore
-Example Shiny app showing interatie exploration of data. Here it is looking at the referrers to the site, by date and optionally the type of referral.
+Example Shiny app showing interatie exploration of data. Here it is looking at the referrers to the site, by date and optionally the type of referral. This is based on the simple [Google Trends example](http://shiny.rstudio.com/) currently on the Shniy website - at the bottom of the page.
 
