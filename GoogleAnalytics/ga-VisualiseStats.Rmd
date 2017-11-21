@@ -9,7 +9,7 @@ output:
 ---
 # Welcome
 
-Welcome to the Google Analytics report template based on [Google Analytics y R. Parte II: gráficos con ggplot2](http://omargonzalesdiaz.com/blog/googleanalytics-ggplot2.html) by omar gonzáles díaz with additional work by Neil Chalk. This is part of a project aiming to show you how to use R for Product Management.
+Welcome to the Google Analytics report template based on [Google Analytics y R. Parte II: gráficos con ggplot2](http://omargonzalesdiaz.com/blog/googleanalytics-ggplot2.html) by [Omar Gonzáles Díaz](https://twitter.com/o_gonzales)  with additional work by Neil Chalk. This is part of a project aiming to show you how to use R for Product Management.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
