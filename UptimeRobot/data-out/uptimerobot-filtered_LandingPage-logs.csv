@@ -1,0 +1,32 @@
+"","Event","Monitor","Date-Time","Reason","Duration (in mins.)"
+"1","Up","Landing page",2017-11-21 18:54:50,"OK",979
+"2","Down","Landing page",2017-11-21 18:52:18,"Bad Gateway",3
+"3","Up","Landing page",2017-11-16 11:07:07,"OK",7665
+"4","Up","Profile page",2017-11-16 11:06:57,"Keyword Found",8647
+"5","Started","Landing page",2017-11-16 11:06:05,"Started",1
+"6","Started","Profile page",2017-11-16 11:05:58,"Started",1
+"7","Paused","Profile page",2017-11-16 10:52:28,"Paused",14
+"8","Paused","Landing page",2017-11-16 10:50:57,"Paused",15
+"9","Down","Profile page",2017-11-16 10:40:50,"Keyword Not Found",12
+"10","Down","Landing page",2017-11-16 10:10:30,"Connection Timeout",40
+"11","Up","Landing page",2017-10-17 22:39:23,"OK",42451
+"12","Down","Landing page",2017-10-17 22:37:58,"Connection Timeout",1
+"13","Up","Profile page",2017-09-20 21:10:23,"Keyword Found",81450
+"14","Up","Landing page",2017-09-20 21:10:18,"OK",38968
+"15","Down","Landing page",2017-09-20 20:52:44,"CloudFlare SSL Handshake",18
+"16","Down","Profile page",2017-09-20 20:52:39,"Keyword Not Found",18
+"17","Up","Profile page",2017-08-18 19:13:25,"Keyword Found",47619
+"18","Started","Profile page",2017-08-18 19:13:22,"Started",0
+"19","Up","Landing page",2017-08-18 19:13:21,"OK",47619
+"20","Started","Landing page",2017-08-18 19:13:18,"Started",0
+"21","Paused","Landing page",2017-08-18 19:09:54,"Paused",3
+"22","Paused","Profile page",2017-08-18 19:09:28,"Paused",4
+"23","Down","Landing page",2017-08-18 19:04:02,"Service Unavailable",6
+"24","Down","Profile page",2017-08-18 19:02:51,"Keyword Not Found",7
+"25","Up","Profile page",2017-07-26 19:27:46,"Keyword Found",33095
+"26","Started","Profile page",2017-07-26 19:27:26,"Started",0
+"27","Up","Landing page",2017-07-26 11:46:11,"OK",33558
+"28","Started","Landing page",2017-07-26 11:45:53,"Started",0
+"29","Paused","Landing page",2017-07-26 11:45:51,"Paused",0
+"30","Up","Landing page",2017-07-26 11:45:06,"OK",1
+"31","Started","Landing page",2017-07-26 11:44:47,"Started",0
