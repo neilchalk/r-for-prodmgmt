@@ -15,6 +15,14 @@ ga_id <- 1
 start_date <- as.Date("2017-01-01") 
 end_date <- Sys.Date() - 1
 
+#Session Query for browser stats
+sessions <- google_analytics_4(ga_id, 
+                               date_range = c(start_date, end_date),
+                               metrics = c("hits"),
+                               dimensions = c("browser","browserVersion", "screenResolution", "browserSize", "country"),
+                               anti_sample = T)
+write.csv(sessions, file="data/sessions_browser_stats.csv")
+
 #Session Query for source and method
 sessions <- google_analytics_4(ga_id, 
                                     date_range = c(start_date, end_date),
