@@ -5,10 +5,10 @@
 # this will be the View ID in the account_list 
 library(googleAnalyticsR)
 ga_auth()
-account_list <- ga_account_list()
+#account_list <- ga_account_list()
 
 ## pick a profile with data to query
-ga_id <- 1
+ga_id <- 125164328
 
 #Configure variables for the date range to analyse
 

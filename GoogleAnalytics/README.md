@@ -1,11 +1,10 @@
 # GoogleAnalytics
 Scripts and visualisations dealing with Google Analytics data
 
-## pre-res.R
-
+## pre-reqs.R
 Run this one first to install the packages required by the scripts in this folder
 
-## ga.R
+## ga-GetData.R
 This covers the authentication and data collection using [GoogleAnalyticsR](http://code.markedmondson.me/googleAnalyticsR/). There is a [great query builder](https://ga-dev-tools.appspot.com/query-explorer/) to collect the data that you want to visualise. A couple notes for your first run and a value you need to alter to make the script work for you:
 
 ``` r
@@ -29,8 +28,11 @@ ga_id <- 1
 ```
 
 ## ga-VisualiseStats.Rmd
-This is based on [Google Analytics y R. Parte II: gráficos con ggplot2](http://omargonzalesdiaz.com/blog/googleanalytics-ggplot2.html) by [Omar Gonzáles Díaz](https://twitter.com/o_gonzales) with a couple of visualisations and updates to work with latest version of libraries. This R Markdown example file shows how you can generate automated reports from Google Analytics data. I have split out the query and saving the data to a plain R script so that the you can pull the data down to your machine and work on it locally, reducing the time it takes to run while you explore the data. 
+This is based on [Google Analytics y R. Parte II: gráficos con ggplot2](http://omargonzalesdiaz.com/blog/googleanalytics-ggplot2.html) by [Omar Gonzáles Díaz](https://twitter.com/o_gonzales)  with a couple of visualisations and updates to work with latest version of libraries. This R Markdown example file shows how you can generate automated reports from Google Analytics data. I have split out the query and saving the data to a plain R script so that the you can pull the data down to your machine and work on it locally, reducing the time it takes to run while you explore the data. 
 
 ## GA-Explore
 Example Shiny app showing interatie exploration of data. Here it is looking at the referrers to the site, by date and optionally the type of referral. This is based on the simple [Google Trends example](http://shiny.rstudio.com/) currently on the Shniy website - at the bottom of the page.
+
+## ga-BrowserStats.R
+Example of a report that I had previously in Google Analytics and then exported into Excel to look for clusters. This is much less manual! Makes use of the rpivottable library to explore the data.
 

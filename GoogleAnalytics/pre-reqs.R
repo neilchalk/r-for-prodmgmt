@@ -1,5 +1,9 @@
 #Install all the packages needed for the scripts in this folder
-install.packages("ggplot2")
-install.packages("googleAnalyticsR")
-install.packages("readr")
-install.packages("forecast")
+#  will check if they are installed first then skip
+packages <- c("readr", "ggplot2", "googleAnalyticsR", "forecast", "shinythemes")
+if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
+  install.packages(setdiff(packages, rownames(installed.packages())))  
+}  else {
+  print("All packages installed")
+}
+
