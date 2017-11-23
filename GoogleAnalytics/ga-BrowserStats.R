@@ -23,3 +23,9 @@ sessions %>%
     aggregatorName = "Sum", 
     vals = "hits", 
     rendererName = "Col Heatmap") 
+# actually to see relative browser takeup a Treemap might be better, e.g. replace above rpivotTable with this
+#rpivotTable(
+#  rows = "browser", 
+#  aggregatorName = "Sum", 
+#  vals = "hits", 
+#  rendererName = "Treemap") 
