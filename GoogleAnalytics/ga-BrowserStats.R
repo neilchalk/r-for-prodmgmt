@@ -10,8 +10,7 @@ session_cutoff <- 100
 
 # Now find the aggregates for different screen sizes to get the subset we are interested in
 session_aggregates <- aggregate(sessions$hits,list(screenResolution = sessions$screenResolution), sum)
-significant_sessions <- subset(session_aggregates, session_aggregates[,2] > session_cutoff)
-
+significant_sessions <- session_aggregates[which(session_aggregates[,2] > session_cutoff),]
 
 # Show a pivot table with the screen resolutions by browser to show the popular clusters
 # This does an initial filter to reduce the amount of data, if we wanted to compare 
