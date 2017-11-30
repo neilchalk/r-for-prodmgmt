@@ -14,11 +14,17 @@ For convenience, run this one first to install the packages required by the scri
 ## Metrics.R
 This script contains two examples, API response time and feature usage over time. 
 
-### Average API response times
+### 1. Average API response times
 This takes the timing metric for API responses and charts it. This plot exaple shows using a date from the time series in the title.
 
-### Feature usage of "feature X"
-Example of querying the metric tracking feature usage of time, this example also shows how to fill the returned time series with "0" for further processing.
+### 2. Feature usage of "feature X"
+Example of querying the metric tracking feature usage over time, this example also shows how to fill the returned time series with "0" for further processing using R.
+
+### 3. Feature usage and filter parameter by environment
+Example of querying the metric tracking feature parameter usage by environment, this example also shows how to fill the returned time series with "0" for further processing by setting the InfluxDB query.
+
+### 4. Feature usage and retrieval type by environment
+Example of querying the metric tracking feature parameter usage month on month. This shows using dplyr to summarise the data and convert values for display, leaving the original dataset as is.
 
 ## data-in
 This folder contains the results of the example call with illustrative data
