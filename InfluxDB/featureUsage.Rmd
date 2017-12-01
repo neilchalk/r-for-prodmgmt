@@ -1,0 +1,120 @@
+---
+title: "Demo Feature usage"
+author: "Neil Chalk"
+date: "1 December 2017"
+output:
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Demo feature usage
+This is a demo report that pulls together the data populated from *metrics.R*. I could have pulled in the data in this RMarkdown file, but I like to have a copy of the data for further analysis. This script also contains a function to draw the graphs. At the moment a lot of the parameters are the same, but more variety could be added.
+
+```{r echo=FALSE, message=FALSE, warning = FALSE}
+library(rpivotTable) 
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(xts)
+
+draw_usage_graph <- function(usage_data, xaxis, usage_type){
+  usage_graph <- ggplot(usage_data, aes(x = category, y = sessions, fill = sessions,
+                                                        label = sessions)) 
+usage_graph <- usage_graph +  geom_col()
+usage_graph <- usage_graph + facet_wrap(~ mes) 
+usage_graph <- usage_graph + coord_flip()
+usage_graph <- usage_graph + labs(x=xaxis, y="sessions", title=usage_type )
+usage_graph <- usage_graph + scale_fill_gradientn(colors = c("blue", "purple", "red"))
+usage_graph <- usage_graph + theme(plot.title=element_text(hjust=0.1))
+usage_graph <- usage_graph + theme(axis.ticks=element_blank())
+usage_graph <- usage_graph + theme(axis.text=element_text(size=12))
+usage_graph <- usage_graph + theme(legend.title=element_text(size=10))
+usage_graph <- usage_graph + theme(legend.text=element_text(size=8))
+usage_graph <- usage_graph + theme(plot.margin=unit(c(0,0,0,0),"cm"))
+usage_graph <- usage_graph + geom_label(hjust = -0.5, color = "white")
+usage_graph
+}
+
+```
+
+## Key metric feature
+Example of where we have a key feature that is linked to our revenue generation. What is the performance of that feature over the time period of this report? how we do think it might perfrom in the near future?
+
+```{r echo=FALSE, message=FALSE, warning = FALSE}
+library(forecast)
+feature_usage <- read.zoo("data-out/influx-audit-processed.csv", sep = ",", header = TRUE, format = "%Y-%m-%d %H", tz = "UTC")
+# now get the frequency write and plot with notional prediction for future usage of "feature X"
+feature_usage_byDay <- ts(feature_usage, frequency = 24)
+plot(hw(feature_usage_byDay,6) , main = c("Usage of feature X, day 1 = ", format(index(feature_usage)[1], "%Y-%m-%d", tz = "")), xlab ="Day", ylab = "Frequency")
+
+```
+
+## High level features
+
+This is the breakdown of how clients are using the system. The features currently tracked in auditing show how the send and content management features are used.
+
+```{r echo=FALSE, fig.height=10, fig.width=10, message=FALSE, warning=FALSE}
+
+audit_recorded_temp <- read_csv("data-in/influx-audit_recorded.csv") 
+audit_recorded_a <- audit_recorded_temp %>%
+  group_by(mes = tenant, category) %>%
+  summarise(sessions = sum(value))  %>%
+  filter(mes < "I") 
+draw_usage_graph(audit_recorded_a, "Feature", "Features by tenant")
+
+```
+
+```{r echo=FALSE, fig.height=10, fig.width=10, message=FALSE, warning = FALSE}
+audit_recorded_b <- audit_recorded_temp %>%
+  group_by(mes = tenant, category) %>%
+  summarise(sessions = sum(value))  %>%
+  filter(mes > "I" && mes < "S") 
+
+draw_usage_graph(audit_recorded_b, "Feature", "Features by tenant")
+```
+
+```{r echo=FALSE, fig.height=10, fig.width=10, message=FALSE, warning = FALSE}
+audit_recorded_c <- audit_recorded_temp %>%
+  group_by(mes = tenant, category) %>%
+  summarise(sessions = sum(value))  %>%
+  filter(mes > "S") 
+
+draw_usage_graph(audit_recorded_c, "Feature", "Features by tenant")
+```
+
+## Filter usage breakdown
+During manual sends a limited number of filters, out of a possible 100, are used during manual sends.
+
+```{r echo=FALSE, fig.height=10, fig.width=10, message=FALSE, warning = FALSE}
+filter_usage_temp <- read_csv("data-in/influx-filter_usage.csv") 
+
+# agreggate and sum the data ready for plotting
+filter_usage_date <- filter_usage_temp %>%
+  group_by(mes = environment, category = filter) %>%
+  summarise(sessions = sum(value))
+
+
+# Create a plot that has gradiated colour bars for filters used
+draw_usage_graph(filter_usage_date, "Filter", "Filters by environment")
+```
+
+## Retrieval types breakdown
+
+```{r echo=FALSE, fig.height=10, fig.width=10, message=FALSE, warning = FALSE}
+retrieve_types_temp <- read_csv("data-in/influx-retrieve_types.csv") 
+
+# Group and convert the timestamp to a month name
+retrieve_types_date <- retrieve_types_temp %>%
+  group_by(mes = months(X1), category = type) %>%
+  summarise(sessions = sum(value))
+# alternative just to do a count
+# retrieve_types_aggregates <- aggregate(a$value,list(a$X1,a$type), sum)
+
+# Create a plot that has gradiated colour bars for filters used
+
+draw_usage_graph(retrieve_types_date, "Retrieval type", "Retrieval type by month")
+```
