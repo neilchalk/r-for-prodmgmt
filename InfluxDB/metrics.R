@@ -32,11 +32,11 @@ feature_usage <- influx_query(con,
                                    query = "SELECT sum(\"value\") FROM \"application audit_recorded\" where category = 'ElementUpdate' AND time >= '2017-11-15T00:00:00Z' group by time(1h)",
                                    timestamp_format = c("n", "u", "ms", "s", "m", "h"), return_xts = TRUE,
                                    chunked = FALSE, simplifyList = TRUE)
-write.csv(feature_usage, file="data-in/influx-audit.csv") 
+write.zoo(feature_usage, file="data-in/influx-audit.csv", sep=",") 
 
 # clean data where the feature isn't used on a particular grouping and save our processed data set
 feature_usage[is.na(feature_usage)] <- 0 # see example three for alternative way of achieving this
-write.csv(feature_usage, file="data-out/influx-audit-processed.csv") 
+write.zoo(feature_usage, file="data-out/influx-audit-processed.csv", sep=",") 
 
 # now get the frequency write and plot with notional prediction for future usage of "feature X"
 feature_usage_byDay <- ts(feature_usage, frequency = 24)
