@@ -28,7 +28,7 @@ usage_graph <- usage_graph +  geom_col()
 usage_graph <- usage_graph + facet_wrap(~ mes) 
 usage_graph <- usage_graph + coord_flip()
 usage_graph <- usage_graph + labs(x=xaxis, y="sessions", title=usage_type )
-usage_graph <- usage_graph + scale_fill_gradientn(colors = c("blue", "purple", "red"))
+usage_graph <- usage_graph + scale_fill_gradientn(colors = c("blue", "purple", "red", "yellow"))
 usage_graph <- usage_graph + theme(plot.title=element_text(hjust=0.1))
 usage_graph <- usage_graph + theme(axis.ticks=element_blank())
 usage_graph <- usage_graph + theme(axis.text=element_text(size=12))
@@ -44,7 +44,7 @@ usage_graph
 ## Key metric feature
 Example of where we have a key feature that is linked to our revenue generation. What is the performance of that feature over the time period of this report? how we do think it might perfrom in the near future?
 
-```{r echo=FALSE, ig.height=5, fig.width=10, message=FALSE, warning = FALSE}
+```{r echo=FALSE, fig.height=5, fig.width=10, message=FALSE, warning = FALSE}
 library(forecast)
 feature_usage <- read.zoo("data-out/influx-audit-processed.csv", sep = ",", header = TRUE, format = "%Y-%m-%d %H", tz = "UTC")
 # now get the frequency write and plot with notional prediction for future usage of "feature X"

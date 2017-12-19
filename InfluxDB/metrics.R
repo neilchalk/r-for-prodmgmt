@@ -1,6 +1,6 @@
 library(xts)
 library(influxdbr)
-
+library(rmarkdown)
 
 # Create the InfluxDB connection, you need to set the host, user and password (also check the port)
 
@@ -45,66 +45,34 @@ plot(hw(feature_usage_byDay,6) , main = c("Usage of feature X, day 1 = ", format
 ######################################################################
 # get the timeseries to work on - example 3 filter usage by environment
 filter_usage <- influx_query(con, 
-                              db = "metrics", 
-                              query = "SELECT environment, filter, value FROM \"interface notification_filter_selection\" WHERE time >= '2017-11-15T00:00:00Z'",
-                              timestamp_format = c("n", "u", "ms", "s", "m", "h"), return_xts = TRUE,
-                              chunked = FALSE, simplifyList = TRUE)
+                             db = "metrics", 
+                             query = "SELECT environment, filter, value FROM \"interface notification_filter_selection\" WHERE time >= '2017-11-15T00:00:00Z'",
+                             timestamp_format = c("n", "u", "ms", "s", "m", "h"), return_xts = TRUE,
+                             chunked = FALSE, simplifyList = TRUE)
 write.csv(filter_usage, file="data-in/influx-filter_usage.csv") 
-filter_usage_temp <- read_csv("data-in/influx-filter_usage.csv") 
 
-# agreggate and sum the data ready for plotting
-filter_usage_date <- filter_usage_temp %>%
-  group_by(mes = environment, filter_used = filter) %>%
-  summarise(sessions = sum(value))
-
-
-# Create a plot that has gradiated colour bars for filters used
-filter_usage_graph <- ggplot(filter_usage_date, aes(x = filter_used, y = sessions, fill = sessions,
-                                                    label = sessions)) 
-filter_usage_graph <- filter_usage_graph +  geom_col()
-filter_usage_graph <- filter_usage_graph + facet_wrap(~ mes) 
-filter_usage_graph <- filter_usage_graph + coord_flip()
-filter_usage_graph <- filter_usage_graph + labs(x="Filter", y="Frequency", title="Filter usage by environment" )
-filter_usage_graph <- filter_usage_graph + scale_fill_gradientn()
-filter_usage_graph <- filter_usage_graph + theme(plot.title=element_text(hjust=0.1))
-filter_usage_graph <- filter_usage_graph + theme(axis.ticks=element_blank())
-filter_usage_graph <- filter_usage_graph + theme(axis.text=element_text(size=12))
-filter_usage_graph <- filter_usage_graph + theme(legend.title=element_text(size=10))
-filter_usage_graph <- filter_usage_graph + theme(legend.text=element_text(size=8))
-filter_usage_graph <- filter_usage_graph + geom_label(hjust = -0.5)
-filter_usage_graph
 
 ######################################################################
-# get the timeseries to work on - example 4 retrieval type by environment
+# get the timeseries to work on - example 4 function by environment
+
+audit_recorded <- influx_query(con, 
+                               db = "metrics", 
+                               query = "SELECT * FROM \"application audit_recorded\" WHERE time >= '2017-11-15T00:00:00Z'",
+                               timestamp_format = c("n", "u", "ms", "s", "m", "h"), return_xts = TRUE,
+                               chunked = FALSE, simplifyList = TRUE)
+write.csv(audit_recorded, file="data-in/influx-audit_recorded.csv") 
+
+######################################################################
+# get the timeseries to work on - example 5 retrieval type by environment
 
 retrieve_types <- influx_query(con, 
                                db = "metrics", 
                                query = "SELECT environment, type, value FROM \"interface notification_retrieve_type_selection\" WHERE time >= '2017-11-15T00:00:00Z'",
-                               timestamp_format = c("n", "u", "ms", "s", "m", "h"), return_xts = TRUE,
+                               timestamp_format = c("n", "u", "ms", "s", "m", "h"), return_xts = FALSE,
                                chunked = FALSE, simplifyList = TRUE)
-write.csv(retrieve_types, file="data-in/influx-retrieve_types.csv") 
-retrieve_types_temp <- read_csv("data-in/influx-retrieve_types.csv") 
 
-# Group and convert the timestamp to a month name
-retrieve_types_date <- retrieve_types_temp %>%
-  group_by(mes = months(X1), type) %>%
-  summarise(sessions = sum(value))
-# alternative just to do a count
-# retrieve_types_aggregates <- aggregate(a$value,list(a$X1,a$type), sum)
+retrieve_types_df <- data.frame(X1 = retrieve_types[[1]]$time, environment = retrieve_types[[1]]$environment, type = retrieve_types[[1]]$type, value = retrieve_types[[1]]$value)
+write.csv(retrieve_types_df, file="data-in/influx-retrieve_types.csv", row.names = FALSE)
 
-# Create a plot that has gradiated colour bars for filters used
-retrieve_types_graph <- ggplot(retrieve_types_date, aes(x = type, y = sessions, fill = sessions,
-                                  label = sessions)) 
-retrieve_types_graph <- retrieve_types_graph +  geom_col()
-retrieve_types_graph <- retrieve_types_graph + facet_wrap(~ mes) 
-retrieve_types_graph <- retrieve_types_graph + coord_flip()
-retrieve_types_graph <- retrieve_types_graph + labs(x="month", y="sessions", title="Retrieval usage by Month" )
-retrieve_types_graph <- retrieve_types_graph + scale_fill_gradientn()
-retrieve_types_graph <- retrieve_types_graph + theme(plot.title=element_text(hjust=0.1))
-retrieve_types_graph <- retrieve_types_graph + theme(axis.ticks=element_blank())
-retrieve_types_graph <- retrieve_types_graph + theme(axis.text=element_text(size=12))
-retrieve_types_graph <- retrieve_types_graph + theme(legend.title=element_text(size=10))
-retrieve_types_graph <- retrieve_types_graph + theme(legend.text=element_text(size=8))
-retrieve_types_graph <- retrieve_types_graph + geom_label(hjust = -0.5)
-retrieve_types_graph
-
+##### create report
+render("featureUsage.Rmd", "all")
