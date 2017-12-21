@@ -97,7 +97,7 @@ gg
 
 ```
 
-What usage pattern do we predit for next week? This can be a useful question to ask if you are putting a feature in production that you expect to increase user sessions. Using a forecast algoritnm like the Holt-Winters method will take into account peaks and troughs to give you a better picture of whether your change has made an impact.
+What usage pattern do we predict for next week? This can be a useful question to ask if you are putting a feature in production that you expect to increase user sessions. Using a forecast algorithm like the Holt-Winters method will take into account peaks and troughs to give you a better picture of whether your change has made an impact.
 
 ```{r echo=FALSE}
 library(forecast)
