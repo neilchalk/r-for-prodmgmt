@@ -2,6 +2,9 @@ library(xts)
 library(influxdbr)
 library(rmarkdown)
 
+#Make sure that you are in the correct working directory
+#setwd("C:/Temp/R/InfluxDB")
+
 # Create the InfluxDB connection, you need to set the host, user and password (also check the port)
 
 con <- influxdbr::influx_connection(scheme = c("http", "https"), host = "",
