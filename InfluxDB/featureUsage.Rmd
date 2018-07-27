@@ -1,7 +1,7 @@
 ---
 title: "Demo Feature usage"
 author: "Neil Chalk"
-date: "1 December 2017"
+date: "14 May 2018"
 output:
   html_document: default
   word_document: default
@@ -12,7 +12,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Demo feature usage
-This is a demo report that pulls together the data populated from *metrics.R*. I could have pulled in the data in this RMarkdown file, but I like to have a copy of the data for further analysis. This script also contains a function to draw the graphs. At the moment a lot of the parameters are the same, but more variety could be added.
+This is a demo report that pulls together the data populated from *metrics.R*.
+This is the data current at time of report generation on `r format(Sys.Date(), "%d/%m/%Y", tz = "")`.
+I could have pulled in the data in this RMarkdown file, but I like to have a copy of the data for further analysis. This script also contains a function to draw the graphs. At the moment a lot of the parameters are the same, but more variety could be added.
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE}
 library(rpivotTable) 
