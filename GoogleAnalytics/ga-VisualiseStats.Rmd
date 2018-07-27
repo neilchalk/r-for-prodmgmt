@@ -29,8 +29,8 @@ sessions$source <- trimws(sessions$source, which = "both")
 #########################################
 
 sessions$mes <- months(sessions$date)
-sessions$mes <- factor(sessions$mes, levels = c("January", "Feburary",
-                                                "March", "Abril",
+sessions$mes <- factor(sessions$mes, levels = c("January", "February",
+                                                "March", "April",
                                                 "May", "June",
                                                 "July", "August",
                                                 "September", "October", "November", "December"), ordered = T)
@@ -58,7 +58,7 @@ sessions_per_day <- sessions %>%
 
 The basic stat for how your site is performing. How many sessions do we get per month?
 
-```{r echo=FALSE}
+```{r fig.height=7, fig.width=15,echo=FALSE}
 
 title <- "Sessions per Month" 
 
@@ -78,9 +78,9 @@ dd
 ```
 
 
-During this time this is how the usage varies during the day over the course of a week.
+During this time, this is how the usage varies during the day over the course of a week.
 
-```{r echo=FALSE}
+```{r fig.height=5, fig.width=10,echo=FALSE}
 
 gg <- ggplot(sessions_hour, aes(x=hour, y=dia, fill=sessions))
 gg <- gg + scale_fill_gradientn(colours = heat_scale)
@@ -99,7 +99,7 @@ gg
 
 What usage pattern do we predict for next week? This can be a useful question to ask if you are putting a feature in production that you expect to increase user sessions. Using a forecast algorithm like the Holt-Winters method will take into account peaks and troughs to give you a better picture of whether your change has made an impact.
 
-```{r echo=FALSE}
+```{r fig.height=5, fig.width=10,echo=FALSE}
 library(forecast)
 xxxx <- ts(sessions_per_day$sessions, frequency = 7)
 hw(xxxx,6)
@@ -110,7 +110,7 @@ plot(hw(xxxx, 6), main = "User sessions forecast for following week", xlab ="Wee
 
 Who has been our main referer? How has the source of traffic changed over time?
 
-```{r echo=FALSE}
+```{r fig.height=10, fig.width=10,echo=FALSE}
 
 sessions_fuente <- sessions %>%
   group_by(mes, source) %>%
@@ -123,13 +123,13 @@ ee <- ee +  geom_col()
 ee <- ee + facet_wrap(~ mes) 
 ee <- ee + coord_flip()
 ee <- ee + labs(x="month", y="sessions", title="sessions per month")
-ee <- ee + scale_fill_gradientn(colours = heat_scale)
+ee <- ee + scale_fill_gradientn(colors = c("blue", "purple", "red", "yellow"))
 ee <- ee + theme(plot.title=element_text(hjust=0.1))
 ee <- ee + theme(axis.ticks=element_blank())
 ee <- ee + theme(axis.text=element_text(size=12))
 ee <- ee + theme(legend.title=element_text(size=10))
 ee <- ee + theme(legend.text=element_text(size=8))
-ee <- ee + geom_label(hjust = -0.5)
+ee <- ee +  geom_label(hjust = -0.5, color = "white")
 ee
 
 ```
