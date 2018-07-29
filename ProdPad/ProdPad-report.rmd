@@ -1,0 +1,112 @@
+---
+title: 'Product Management Report: ProdPad'
+author: "Neil Chalk"
+date: "7/28/2018"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Product Progress
+
+This is the data in ProdPad current at time of report generation on `r format(Sys.Date(), "%d/%m/%Y", tz = "")`. The current state of the backlog is as follows:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(readr)
+
+#Replace with your own states and workflow order
+states <- c("New Idea", "In Analysis", "Product Definition", 
+            "Market Validation", "Queued for Dev", "In Development", "QA", "Released")
+
+
+backlog <- read_csv("data-out/backlog.csv") 
+backlog$workflow.status <- factor(backlog$workflow.status, levels = states, ordered = TRUE)
+
+backlog %>% 
+  group_by(workflow.status) %>%
+  summarise(Engagement = sum(isGoal1),Revenue = sum(isGoal2), Usability = sum(isGoal3), Total = n()) 
+```
+Things that have been worked on in the past 3 months are
+```{r echo=FALSE}
+
+
+backlog %>% 
+  filter(backlog$created_at > '2018-04-28' | backlog$updated_at > '2018-04-28') %>%
+  group_by(workflow.status) %>%
+  summarise(Engagement = sum(isGoal1),Revenue = sum(isGoal2), Usability = sum(isGoal3), Total = n()) 
+```
+
+Items that are in the packaging phase are:
+```{r echo=FALSE}
+
+
+backlog %>% 
+  filter(workflow.status == "QA" | workflow.status ==   "Released") %>%
+  select(title, web_url, workflow.status) %>%
+  print
+```
+
+## Feedback
+
+Insight from feedback trends
+
+Word cloud (all time vs 3 months vs 1 month)
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library("tm")
+library("wordcloud")
+library("slam")
+#library("topicmodels")
+library("readr")
+
+dataset <- read_csv("data-out/feedback.csv") 
+
+dataset %>%
+  filter(dataset$created_at > '2018-04-28' | dataset$updated_at > '2018-04-28') %>%
+  group_by(customer.name) %>%
+  summarise(Total = n()) %>% 
+  arrange(desc(Total))
+
+feedback.data <- dataset$feedback
+#
+
+#Clean Text to do some data mining
+feedback.data = gsub("http[^[:blank:]]+", "", feedback.data)
+feedback.data = gsub("@\\w+", "", feedback.data)
+feedback.data = gsub("[ \t]{2,}", "", feedback.data)
+feedback.data = gsub("^\\s+|\\s+$", "", feedback.data)
+feedback.data <- gsub('\\d+', '', feedback.data)
+feedback.data = gsub("[[:punct:]]", " ", feedback.data)
+
+corpus = Corpus(VectorSource(feedback.data))
+corpus = tm_map(corpus,removePunctuation)
+corpus = tm_map(corpus,stripWhitespace)
+corpus = tm_map(corpus,tolower)
+corpus = tm_map(corpus,removeWords,stopwords("english"))
+tdm = DocumentTermMatrix(corpus) # Creating a Term document Matrix
+
+m <- as.matrix(tdm$dimnames$Terms)
+# calculate the frequency of words and sort it by frequency
+#TODO fix the word cloud generation - issue with R 3.4?
+#word.freq <- sort(rowSums(m), decreasing = T)
+#wordcloud(words = names(word.freq), freq = word.freq, min.freq = 3,
+#          random.order = F)
+
+```
+
+Topic association with themes from roadmap
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+#put your own terms here
+findAssocs(tdm, "sign-up", 0.25)
+findAssocs(tdm, "search", 0.25)
+findAssocs(tdm, "feed", 0.6)
+findAssocs(tdm, "API", 0.25)
+
+```
+
