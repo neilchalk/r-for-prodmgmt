@@ -33,27 +33,37 @@ backlog %>%
   group_by(workflow.status) %>%
   summarise(Engagement = sum(isGoal1), Revenue = sum(isGoal2), Usability = sum(isGoal3), Total = n()) %>%
   kable
+  
+backlog %>% 
+  summarise(Totals = "", Engagement = sum(isGoal1), Revenue = sum(isGoal2), Usability = sum(isGoal3), Total = n()) %>%
+  kable  
+  
 ```
+
 Things that have been worked on in the past 3 months are:
 
 ```{r echo=FALSE}
-
-
 backlog %>% 
   filter(backlog$created_at > '2018-04-28' | backlog$updated_at > '2018-04-28') %>%
   group_by(workflow.status) %>%
   summarise(Engagement = sum(isGoal1), Revenue = sum(isGoal2), Usability = sum(isGoal3), Total = n()) %>%
   kable
+  
+backlog %>% 
+  filter(backlog$created_at > '2018-04-28' | backlog$updated_at > '2018-04-28') %>%
+  summarise(Totals = "", Engagement = sum(isGoal1), Revenue = sum(isGoal2), Usability = sum(isGoal3), Total = n()) %>%
+  kable  
+  
 ```
 
 Items that are in the packaging phase are:
+
 ```{r echo=FALSE}
-
-
 backlog %>% 
   filter(workflow.status == "QA" | workflow.status ==   "Released") %>%
   select(title, web_url, workflow.status) %>%
   kable
+  
 ```
 
 ## Feedback
@@ -76,6 +86,7 @@ dataset %>%
   summarise(Total = n()) %>% 
   arrange(desc(Total)) %>%
   kable
+  
 ```
 A high-level word cloud showing the popular words contain in the feedback:
 
