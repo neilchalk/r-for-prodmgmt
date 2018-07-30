@@ -16,15 +16,6 @@ for(i in 0:9){
 #combine all into one
 backlog <- rbind_pages(pages)
 
-#tidy up - TODO convert to dplyr workflow?
-backlog$creator.display_name <- factor(backlog$creator.display_name)
-backlog$state <- factor(backlog$state)
-backlog$impact <- factor(backlog$impact)
-backlog$effort <- factor(backlog$effort)
-backlog$account.id  <- NULL  
-backlog$account.slug <- NULL       
-backlog$account.name <- NULL
-
 # Get extended details to group ideas by goal
 i <- 1
 isEngagement <- vector()
@@ -70,7 +61,11 @@ backlog$isGoal2 <- isRevenue
 backlog$isGoal3 <- isUsability
 backlog$workflow.status <- WIP
 
-write.csv(backlog, file="data-out/backlog.csv") 
+backlog %>% 
+  distinct(id, .keep_all = TRUE) %>%
+  select(-.data$account.id, -.data$account.slug, -.data$account.name, 
+         -.data$creator.id, -.data$creator.username) %>%
+  write.csv(file="data-out/backlog.csv") 
 
 
 baseurl <- "https://api.prodpad.com/v1/feedbacks?apikey="
