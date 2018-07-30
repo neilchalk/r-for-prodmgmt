@@ -1,11 +1,11 @@
 ---
 title: 'Product Management Report: ProdPad'
 author: "Neil Chalk"
-date: "7/28/2018"
+date: "7/30/2018"
 output:
-  html_document: default
-  pdf_document: default
   word_document: default
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
@@ -14,11 +14,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Product Progress
 
-This is the data in ProdPad current at time of report generation on `r format(Sys.Date(), "%d/%m/%Y", tz = "")`. The current state of the backlog is as follows:
+This is the data in ProdPad current at time of report generation on `r format(Sys.Date(), "%d/%m/%Y", tz = "")`. The goals listed should match goals from the business plan for the current period. The current state of the backlog is as follows:
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
 library(readr)
+library(knitr)
 
 #Replace with your own states and workflow order
 states <- c("New Idea", "In Analysis", "Product Definition", 
@@ -30,16 +31,19 @@ backlog$workflow.status <- factor(backlog$workflow.status, levels = states, orde
 
 backlog %>% 
   group_by(workflow.status) %>%
-  summarise(Engagement = sum(isGoal1),Revenue = sum(isGoal2), Usability = sum(isGoal3), Total = n()) 
+  summarise(Engagement = sum(isGoal1), Revenue = sum(isGoal2), Usability = sum(isGoal3), Total = n()) %>%
+  kable
 ```
-Things that have been worked on in the past 3 months are
+Things that have been worked on in the past 3 months are:
+
 ```{r echo=FALSE}
 
 
 backlog %>% 
   filter(backlog$created_at > '2018-04-28' | backlog$updated_at > '2018-04-28') %>%
   group_by(workflow.status) %>%
-  summarise(Engagement = sum(isGoal1),Revenue = sum(isGoal2), Usability = sum(isGoal3), Total = n()) 
+  summarise(Engagement = sum(isGoal1), Revenue = sum(isGoal2), Usability = sum(isGoal3), Total = n()) %>%
+  kable
 ```
 
 Items that are in the packaging phase are:
@@ -49,14 +53,13 @@ Items that are in the packaging phase are:
 backlog %>% 
   filter(workflow.status == "QA" | workflow.status ==   "Released") %>%
   select(title, web_url, workflow.status) %>%
-  print
+  kable
 ```
 
 ## Feedback
 
-Insight from feedback trends
+This section tries to expolre insight from feedback trends. The following sources of feedback are being considered in this period:
 
-Word cloud (all time vs 3 months vs 1 month)
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library("tm")
@@ -71,10 +74,13 @@ dataset %>%
   filter(dataset$created_at > '2018-04-28' | dataset$updated_at > '2018-04-28') %>%
   group_by(customer.name) %>%
   summarise(Total = n()) %>% 
-  arrange(desc(Total))
+  arrange(desc(Total)) %>%
+  kable
+```
+A high-level word cloud showing the popular words contain in the feedback:
 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 feedback.data <- dataset$feedback
-#
 
 #Clean Text to do some data mining
 feedback.data = gsub("http[^[:blank:]]+", "", feedback.data)
@@ -92,16 +98,17 @@ corpus = tm_map(corpus,removeWords,stopwords("english"))
 tdm = DocumentTermMatrix(corpus) # Creating a Term document Matrix
 
 m <- as.matrix(tdm$dimnames$Terms)
+v <- as.matrix(tdm)
 # calculate the frequency of words and sort it by frequency
-#TODO fix the word cloud generation - issue with R 3.4?
-#word.freq <- sort(rowSums(m), decreasing = T)
-#wordcloud(words = names(word.freq), freq = word.freq, min.freq = 3,
-#          random.order = F)
+word.freq <- sort(rowSums(v), decreasing = T)
+wordcloud(words = m[word.freq], freq = word.freq, min.freq = 3,
+          random.order = F)
 
 ```
 
-Topic association with themes from roadmap
+Topic association of words found in the feedback with themes from roadmap for further investigation:
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
+
 #put your own terms here
 findAssocs(tdm, "sign-up", 0.25)
 findAssocs(tdm, "search", 0.25)
@@ -109,4 +116,3 @@ findAssocs(tdm, "feed", 0.6)
 findAssocs(tdm, "API", 0.25)
 
 ```
-
