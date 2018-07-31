@@ -30,12 +30,12 @@ backlog <- read_csv("data-out/backlog.csv")
 backlog$workflow.status <- factor(backlog$workflow.status, levels = states, ordered = TRUE)
 
 backlog %>% 
-  group_by(workflow.status) %>%
-  summarise(Engagement = sum(isGoal1), Revenue = sum(isGoal2), Usability = sum(isGoal3), Total = n()) %>%
+  group_by(.data$workflow.status) %>%
+  summarise(Engagement = sum(.data$isGoal1), Revenue = sum(.data$isGoal2), Usability = sum(.data$isGoal3), Total = n()) %>%
   kable
   
 backlog %>% 
-  summarise(Totals = "", Engagement = sum(isGoal1), Revenue = sum(isGoal2), Usability = sum(isGoal3), Total = n()) %>%
+  summarise(Totals = "", Engagement = sum(.data$isGoal1), Revenue = sum(.data$isGoal2), Usability = sum(.data$isGoal3), Total = n()) %>%
   kable  
   
 ```
@@ -45,13 +45,13 @@ Things that have been worked on in the past 3 months are:
 ```{r echo=FALSE}
 backlog %>% 
   filter(backlog$created_at > '2018-04-28' | backlog$updated_at > '2018-04-28') %>%
-  group_by(workflow.status) %>%
-  summarise(Engagement = sum(isGoal1), Revenue = sum(isGoal2), Usability = sum(isGoal3), Total = n()) %>%
+  group_by(.data$workflow.status) %>%
+  summarise(Engagement = sum(.data$isGoal1), Revenue = sum(.data$isGoal2), Usability = sum(.data$isGoal3), Total = n()) %>%
   kable
   
 backlog %>% 
   filter(backlog$created_at > '2018-04-28' | backlog$updated_at > '2018-04-28') %>%
-  summarise(Totals = "", Engagement = sum(isGoal1), Revenue = sum(isGoal2), Usability = sum(isGoal3), Total = n()) %>%
+  summarise(Totals = "", Engagement = sum(.data$isGoal1), Revenue = sum(.data$isGoal2), Usability = sum(.data$isGoal3), Total = n()) %>%
   kable  
   
 ```
@@ -60,8 +60,8 @@ Items that are in the packaging phase are:
 
 ```{r echo=FALSE}
 backlog %>% 
-  filter(workflow.status == "QA" | workflow.status ==   "Released") %>%
-  select(title, web_url, workflow.status) %>%
+  filter(.data$workflow.status == "QA" | .data$workflow.status ==   "Released") %>%
+  select(.data$title, .data$web_url, .data$workflow.status) %>%
   kable
   
 ```
@@ -82,9 +82,9 @@ dataset <- read_csv("data-out/feedback.csv")
 
 dataset %>%
   filter(dataset$created_at > '2018-04-28' | dataset$updated_at > '2018-04-28') %>%
-  group_by(customer.name) %>%
+  group_by(.data$customer.name) %>%
   summarise(Total = n()) %>% 
-  arrange(desc(Total)) %>%
+  arrange(desc(.data$Total)) %>%
   kable
   
 ```
