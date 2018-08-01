@@ -1,15 +1,17 @@
 ---
 title: 'Product Management Report: ProdPad'
 author: "Neil Chalk"
-date: "7/30/2018"
+date: "8/01/2018"
 output:
-  word_document: default
+  word_document: 
+    toc: true  
   pdf_document: default
   html_document: default
 ---
 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+beginDate <- '2018-05-01'
 ```
 
 ## Product Progress
@@ -40,7 +42,7 @@ backlog %>%
   
 ```
 
-Things that have been worked on in the past 3 months are:
+Things that have been worked on since `r beginDate` are:
 
 ```{r echo=FALSE}
 backlog %>% 
@@ -66,28 +68,49 @@ backlog %>%
   
 ```
 
+### Idea Contributers
+The contributers of ideas since `r beginDate` were:
+
+```{r echo=FALSE}
+
+
+backlog %>% 
+  filter(backlog$created_at > beginDate | backlog$updated_at > beginDate) %>%
+  group_by(Contributer = .data$creator.display_name) %>%
+  summarise(Engagement = sum(isGoal1), 
+            Revenue = sum(isGoal2), 
+            Usability = sum(isGoal3), 
+            Uncategorised = n() - (sum(isGoal1)+sum(isGoal2)+sum(isGoal3)),
+            Total = n()) %>%
+  kable
+```
+
+This is useful as a quick check for a spread of people, e.g. highlight if ideas being logged pro-actively from projects.
+
 ## Feedback
 
-This section tries to expolre insight from feedback trends. The following sources of feedback are being considered in this period:
+This section tries to explore insight from feedback trends. The following sources of feedback are being considered, which have been logged since `r beginDate`, this is useful as a quick check for a spread of people, e.g. you can see if X had logged feedback and you weren't aware:
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library("tm")
 library("wordcloud")
 library("slam")
-#library("topicmodels")
 library("readr")
 
 dataset <- read_csv("data-out/feedback.csv") 
 
 dataset %>%
-  filter(dataset$created_at > '2018-04-28' | dataset$updated_at > '2018-04-28') %>%
+  filter(dataset$created_at > beginDate | dataset$updated_at > beginDate) %>%
   group_by(.data$customer.name) %>%
   summarise(Total = n()) %>% 
   arrange(desc(.data$Total)) %>%
   kable
   
 ```
+
+To get more of an idea of the nature and quality of feedback please use the [ProdPad UI](https://app.prodpad.com/feedback/contacts).
+
 A high-level word cloud showing the popular words contain in the feedback:
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
