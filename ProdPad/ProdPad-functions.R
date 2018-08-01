@@ -16,10 +16,10 @@ tag_status <- function(backlog){
     }
     
     if (!is.null(mydata$tags)) { 
+      isEngagement[[i]] <- 0
+      isRevenue[[i]] <- 0
+      isUsability[[i]] <- 0
       for(tag in  mydata$tags$tag){
-        isEngagement[[i]] <- 0
-        isRevenue[[i]] <- 0
-        isUsability[[i]] <- 0
         switch(tag,
                "User Engagement" = isEngagement[[i]] <- 1,
                "Portal Usability" = isUsability[[i]] <- 1,
