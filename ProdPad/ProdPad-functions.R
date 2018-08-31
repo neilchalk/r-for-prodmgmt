@@ -56,3 +56,5 @@ retrieve_ideas <- function(){
   }
   return(rbind_pages(pages))
 }
+
+"%/0%" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
