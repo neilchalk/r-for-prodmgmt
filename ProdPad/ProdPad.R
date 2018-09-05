@@ -11,7 +11,7 @@ source("ProdPad-functions.R")
 ##### START OF DATA RETRIEVAL ########
 backlog <- retrieve_ideas()
 # set the raw prioritisation score 
-backlog$raw <- backlog$impact %/0% backlog$effort
+backlog$raw <- as.integer(backlog$impact) %/0% as.integer(backlog$effort)
 
 backlog %>% 
   tag_status() %>%
