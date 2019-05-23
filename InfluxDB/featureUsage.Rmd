@@ -111,7 +111,7 @@ retrieve_types_temp <- read_csv("data-in/influx-retrieve_types.csv")
 
 # Group and convert the timestamp to a month name
 retrieve_types_date <- retrieve_types_temp %>%
-  group_by(mes = months(X1), category = type) %>%
+  group_by(mes = format(X1,'%B %Y'), category = type) %>%
   summarise(sessions = sum(value))
 # alternative just to do a count
 # retrieve_types_aggregates <- aggregate(a$value,list(a$X1,a$type), sum)
