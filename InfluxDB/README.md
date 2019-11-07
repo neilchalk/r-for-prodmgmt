@@ -1,4 +1,4 @@
-# UptimeRobot
+# InfluxDB
 
 ## Background
 Influx is a great database for storing timeseries information. For example feature usage metrics. To get going with the influx integration you will need to edit this line with the host, user name and password:
